@@ -1,0 +1,8 @@
+.idea/
+.gradle/
+out/
+*.iml
+.kotlintest/
+build/
+securedEtc/
+tmp/
