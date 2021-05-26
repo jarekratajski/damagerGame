@@ -9,27 +9,29 @@ object Rules {
             else -> k20Result <= stat.value()
         }
 
-    fun hitPower(k20Result: Int, strength:Stat) =
-        ((k20Result+strength.value() - 15)/4)+1
+    fun hitPower(k20Result: Int, strength: Stat) =
+        ((k20Result + strength.value() - 15) / 4) + 1
 
-    fun expHealth(lifeLoss: Int, health:Stat) =
-        health.experience(lifeLoss*5)
 
-    fun expDodging(dexterity: Stat, result: CombatRoundResult): Stat =
+    fun defenderExperience(defender: Stats, result: CombatRoundResult): Stats =
+        Stats.empty.healthIncrease(expHealth(result.hit)) +
+                expDodging(defender, result)
+
+    private fun expDodging(defender: Stats, result: CombatRoundResult): Stats =
         if (result.defenderDodged) {
-             dexterity.experience(result.attacker.dexterity.value()*2)
+            Stats.empty.dexterityIncrease(result.attacker.effectiveStats().dexterity.value() * 2)
         } else {
-            dexterity
+            Stats.empty
         }
 
-    fun expAttack(attacker: Character, result: CombatRoundResult) : Character =
+    private fun expHealth(lifeLoss: Int): Int = lifeLoss * 5
+
+
+    fun expAttack(attacker: Stats, result: CombatRoundResult): Stats =
         if (result.hit > 0) {
-            attacker.copy(
-                dexterity = attacker.dexterity.experience(result.hit+10),
-                strength = attacker.strength.experience(result.hit*5)
-            )
+            Stats.empty.dexterityIncrease(result.hit + 10).strengthIncrease(result.hit*5)
         } else {
-            attacker
+            Stats.empty
         }
 
 }

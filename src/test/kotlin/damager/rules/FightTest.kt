@@ -1,11 +1,10 @@
 package damager.rules
 
 import damager.engine.Randomizer
+import damager.player.PlayerCharacter
 import dev.neeffect.nee.Nee
 import dev.neeffect.nee.effects.test.get
 import io.kotest.core.spec.style.DescribeSpec
-import io.kotest.core.spec.style.FunSpec
-import io.kotest.matchers.shouldBe
 
 class FightTest : DescribeSpec({
     describe("round of fight") {
@@ -19,21 +18,14 @@ class FightTest : DescribeSpec({
 
 })  {
     companion object {
-        val chara = Character(
-            name = "a",
+        val stdStats = Stats(
             strength = Stat.level(5),
             dexterity = Stat.level(5),
             health = Stat.level(5),
             life = 1
         ).maxLife()
-        val charb = Character(
-            name = "b",
-            strength = Stat.level(5),
-            dexterity = Stat.level(5),
-            health = Stat.level(5),
-            life = 1
-        ).maxLife()
-
+        val chara = PlayerCharacter("a", stdStats)
+        val charb = PlayerCharacter("b", stdStats)
         val initidalFightData = FightData(chara, charb)
     }
 }
