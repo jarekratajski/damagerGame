@@ -1,5 +1,6 @@
 package damager.rules
 
+import damager.IO
 import damager.engine.Randomizer
 import damager.player.PlayerCharacter
 import dev.neeffect.nee.Nee
@@ -38,5 +39,6 @@ class TestRandomizer(k20Sequences: List<Int>) : Randomizer {
             nextVal
         }
 
+    override fun token(): IO<String> = TODO()
 
 }

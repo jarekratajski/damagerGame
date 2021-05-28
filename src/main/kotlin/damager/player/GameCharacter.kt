@@ -1,6 +1,5 @@
 package damager.player
 
-import damager.rules.CombatRoundResult
 import damager.rules.Stat
 import damager.rules.Stats
 
@@ -15,7 +14,6 @@ sealed class GameCharacter {
     abstract fun strength(): Stat
 
     abstract fun exp(increase: Stats): GameCharacter
-
 }
 
 data class PlayerCharacter(val name: String, private val baseStats: Stats) : GameCharacter() {
