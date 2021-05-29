@@ -9,7 +9,11 @@ POST localhost:7777/api/game/admin/reset
 
 ###
 POST localhost:7777/api/game/player/command
-token: bbb
+token: PybGunlX
 Content-Type: application/json
 
 {"@type":"MoveCommand","direction":"RIGHT"}
+
+
+###
+POST localhost:7777/api/game/player?name=Jurek

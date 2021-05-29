@@ -178,7 +178,20 @@ data class GameState(
         }.getOrElse(this)
     }
 
-    private fun canMove(fromLocation: LocatedCell, toLocation: LocatedCell): Boolean = true
+    private fun canMove(fromLocation: LocatedCell, toLocation: LocatedCell): Boolean = run {
+        val diffx = fromLocation.coord.x - toLocation.coord.x
+        val diffy = fromLocation.coord.y - toLocation.coord.y
+        when (diffx) {
+            -1 -> fromLocation.cell.doorRight && toLocation.cell.doorLeft
+            1 -> fromLocation.cell.doorLeft && toLocation.cell.doorRight
+            else -> true
+        } && when (diffy) {
+            -1 -> fromLocation.cell.doorDown && toLocation.cell.doorUp
+            1 -> fromLocation.cell.doorUp && toLocation.cell.doorDown
+            else -> true
+        }
+    }
+
 
     private fun updatePlayerLocation(player: Player, moved: Coord): GameState = this.copy(
         objects = objects.map { obj ->
@@ -197,8 +210,8 @@ data class GameState(
         val players = getAlivePlayers(cellObjects)
 
         if (players.size() > 1) {
-            List.range(0, players.size()/2).fold( Nee.success { this }.e()) { state, index ->
-                state.flatMap {  prevState ->
+            List.range(0, players.size() / 2).fold(Nee.success { this }.e()) { state, index ->
+                state.flatMap { prevState ->
                     randomizer.nextInt(players.size()).flatMap { pl1 ->
                         val pl2 = if (pl1 + 1 >= players.size()) 0 else pl1 + 1
                         val player1 = players[pl1] as PlayerObject
@@ -218,7 +231,8 @@ data class GameState(
         }
     }
 
-    private fun addLogs(ls: Seq<LogStatement>) :GameState = this.copy(logs = logs.prependAll(ls.reverse().map {it.toView()}));
+    private fun addLogs(ls: Seq<LogStatement>): GameState =
+        this.copy(logs = logs.prependAll(ls.reverse().map { it.toView() }));
 
 
     private fun getAlivePlayers(cellObjects: Seq<GameObject>): Seq<PlayerObject> =
@@ -254,7 +268,7 @@ data class GameState(
                         token = player.token,
                         gameObject = it,
                         commands = player.commands,
-                        logs = this.logs.take(10).filter {it.canSee(player.name)}
+                        logs = this.logs.take(10).filter { it.canSee(player.name) }
                     )
                 }.e()
             }.getOrElse {
