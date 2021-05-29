@@ -24,9 +24,15 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 val errorHandler: ErrorHandler = { error ->
+
+    if (error is Throwable) {
+        error.printStackTrace()
+    }
     when (error) {
         is Error -> DefaultErrorHandler(error.msg)
-        else -> DefaultErrorHandler(error)
+        else -> DefaultErrorHandler(error).also {
+            System.err.println(error)
+        }
     }
 }
 
