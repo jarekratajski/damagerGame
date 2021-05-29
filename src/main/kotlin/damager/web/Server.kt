@@ -57,7 +57,7 @@ object Server {
             }
         },
             1,
-            5,
+            3,
             TimeUnit.SECONDS
         )
 

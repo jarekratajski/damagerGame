@@ -17,7 +17,7 @@ object Rules {
         when (k20Result) {
             1 -> true
             20 -> false
-            else -> k20Result*1.5 <= health.value()
+            else -> k20Result*1.8 <= health.value()
         }
 
 

@@ -93,20 +93,23 @@ data class GameState(
     }
 
     fun tick(randomizer: Randomizer): IO<GameState> = run {
+        relife(randomizer).map {
+            it.movePlayers()
+        }.flatMap {
+            it.figths(randomizer)
+        }
+    }
+
+    private fun figths(randomizer: Randomizer): IO<GameState> = run {
         val coords = List.range(0, this.playfield.height()).flatMap { y ->
             List.range(0, this.playfield.width()).map { x ->
                 Coord(x, y)
             }
         }
-        val afterFights = coords.fold(Nee.success { this } as IO<GameState>) { prev, location ->
+        coords.fold(Nee.success { this } as IO<GameState>) { prev, location ->
             prev.flatMap { state ->
                 state.resolveCellTick(location, randomizer)
             }
-        }
-        afterFights.map { state ->
-            state.movePlayers()
-        }.flatMap { state ->
-            state.relife(randomizer)
         }
     }
 
@@ -135,6 +138,7 @@ data class GameState(
             }
         }
     }
+
 
     private fun movePlayers(): GameState =
         this.players.fold(this) { state, player ->
