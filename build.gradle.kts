@@ -1,7 +1,7 @@
 
 plugins {
     kotlin("jvm") version "1.4.31"
-    id("io.gitlab.arturbosch.detekt").version("1.16.0")
+   // id("io.gitlab.arturbosch.detekt").version("1.16.0")
 }
 
 repositories {
@@ -15,8 +15,8 @@ val nee_version = "0.7.2-LOCAL"
 
 dependencies {
     implementation("pl.setblack:nee-ctx-web-ktor:$nee_version")
-    detektPlugins("pl.setblack:kure-potlin:0.5.0")
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.16.0")
+    //detektPlugins("pl.setblack:kure-potlin:0.5.0")
+   // detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.16.0")
 
     implementation("io.ktor:ktor-http-jvm:$ktor_version")
     implementation("io.ktor:ktor-jackson:$ktor_version")
@@ -49,13 +49,30 @@ compileTestKotlin.kotlinOptions.apply {
     freeCompilerArgs = listOf("-XXLanguage:+InlineClasses")
 }
 
-tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
-    this.jvmTarget = "1.8"
-    this.classpath.setFrom(compileKotlin.classpath.asPath)
+//tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+//    this.jvmTarget = "1.8"
+//    this.classpath.setFrom(compileKotlin.classpath.asPath)
+//}
+
+//tasks {
+//    "build" {
+//        dependsOn("detektMain")
+//    }
+//}
+
+
+val fatJar = task("fatJar", type = Jar::class) {
+    archiveBaseName.set("server-all")
+    manifest {
+        attributes["Implementation-Title"] = "Damager Game"
+        attributes["Main-Class"] = "damager.web.ServerKt"
+    }
+    from(configurations.runtimeClasspath.get().map({ if (it.isDirectory) it else zipTree(it) }))
+    with(tasks.jar.get() as CopySpec)
 }
 
 tasks {
     "build" {
-        dependsOn("detektMain")
+        dependsOn(fatJar)
     }
 }
