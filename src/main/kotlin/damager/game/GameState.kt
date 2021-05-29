@@ -176,19 +176,7 @@ data class GameState(
         }.getOrElse(this)
     }
 
-    private fun canMove(fromLocation: LocatedCell, toLocation: LocatedCell): Boolean = run {
-        val diffx = toLocation.coord.x - fromLocation.coord.x
-        val diffy = toLocation.coord.y - fromLocation.coord.y
-        when (diffx) {
-            1 -> fromLocation.cell.doorRight && toLocation.cell.doorLeft
-            -1 -> fromLocation.cell.doorLeft && toLocation.cell.doorRight
-            else -> true
-        } && when (diffy) {
-            1 -> fromLocation.cell.doorDown && toLocation.cell.doorUp
-            -1 -> fromLocation.cell.doorUp && toLocation.cell.doorDown
-            else -> true
-        }
-    }
+    private fun canMove(fromLocation: LocatedCell, toLocation: LocatedCell): Boolean = true
 
     private fun updatePlayerLocation(player: Player, moved: Coord): GameState = this.copy(
         objects = objects.map { obj ->
