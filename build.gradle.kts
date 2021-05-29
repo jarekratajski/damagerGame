@@ -11,7 +11,7 @@ repositories {
 }
 
 val ktor_version = "1.5.1"
-val nee_version = "0.7.2-LOCAL"
+val nee_version = "0.7.3"
 
 dependencies {
     implementation("pl.setblack:nee-ctx-web-ktor:$nee_version")
