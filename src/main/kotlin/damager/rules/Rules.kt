@@ -13,6 +13,14 @@ object Rules {
         ((k20Result + strength.value() - 12) / 4) + 1
 
 
+    fun lifeRestore(k20Result: Int,  life: Int, health:Stat) : Boolean =
+        when (k20Result) {
+            1 -> true
+            20 -> false
+            else -> k20Result*1.5 <= health.value()
+        }
+
+
     fun defenderExperience(defender: Stats, result: CombatRoundResult): Stats =
         Stats.empty.healthIncrease(expHealth(result.hit)) +
                 expDodging(defender, result)

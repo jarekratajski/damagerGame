@@ -118,7 +118,7 @@ data class GameState(
                     if (playerObject.isAlive()) {
                         val stats = playerObject.character.effectiveStats()
                         randomizer.k20().flatMap { rng ->
-                            val newPlayer = if (Rules.success(rng, stats.health)) {
+                            val newPlayer = if (Rules.lifeRestore(rng, stats.life, stats.health)) {
                                 val gameChar = playerObject.character.lifeIncrease(1)
                                 playerObject.update(gameChar)
                             } else {

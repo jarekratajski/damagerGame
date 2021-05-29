@@ -50,7 +50,11 @@ object Server {
         val scheduler = Executors.newScheduledThreadPool(1)
         scheduler.scheduleAtFixedRate({
             println("ticking")
-                           service.tick().perform(Unit).get()
+            try {
+                service.tick().perform(Unit).get()
+            } catch (e:Throwable) {
+                e.printStackTrace()
+            }
         },
             1,
             5,

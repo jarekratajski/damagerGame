@@ -20,8 +20,8 @@ data class Maze(val rows: List<MazeRow>) {
     fun getLocatedCell(coord: Coord) = LocatedCell(coord, getCell(coord))
 
     fun neighbours(coord: Coord) = run {
-        val height = height() - 1
-        val width = width() - 1
+        val height = height()
+        val width = width()
         HashSet.of(
             coord.copy(y = coord.y - 1).cap(width, height),
             coord.copy(y = coord.y + 1).cap(width, height),
@@ -77,8 +77,8 @@ data class MazeRow(val cells: List<Cell>) {
 
 data class Coord(val x: Int, val y: Int) {
     fun cap(width: Int, height: Int) = copy(
-        x = x.coerceIn(0, width),
-        y = y.coerceIn(0, height)
+        x = x.coerceIn(0, width-1),
+        y = y.coerceIn(0, height-1)
     )
 
     override fun toString(): String = "($x,$y)"
