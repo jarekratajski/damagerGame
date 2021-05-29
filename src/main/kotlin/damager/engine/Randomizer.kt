@@ -11,6 +11,8 @@ interface Randomizer {
     fun k20(): Nee<Any, Nothing, Int>
 
     fun token(): IO<String>
+
+    fun nextInt(bount:Int) : IO<Int>
 }
 
 class JvmRandomizer(private val rng: Random) : Randomizer {
@@ -25,8 +27,9 @@ class JvmRandomizer(private val rng: Random) : Randomizer {
         val res = Base64.getEncoder().encode(bytes)
         res.toString(Charset.defaultCharset())
     }
-}
 
+    override fun nextInt(bound: Int): IO<Int>  = Nee.success { rng.nextInt(bound) }
+}
 
 fun main() {
     val rng = JvmRandomizer(Random())

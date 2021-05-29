@@ -10,7 +10,7 @@ object Rules {
         }
 
     fun hitPower(k20Result: Int, strength: Stat) =
-        ((k20Result + strength.value() - 15) / 4) + 1
+        ((k20Result + strength.value() - 12) / 4) + 1
 
 
     fun defenderExperience(defender: Stats, result: CombatRoundResult): Stats =

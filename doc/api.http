@@ -1,0 +1,15 @@
+GET localhost:7777/api/game/admin/view
+
+
+###
+
+
+POST localhost:7777/api/game/admin/reset
+
+
+###
+POST localhost:7777/api/game/player/command
+token: bbb
+Content-Type: application/json
+
+{"@type":"MoveCommand","direction":"RIGHT"}

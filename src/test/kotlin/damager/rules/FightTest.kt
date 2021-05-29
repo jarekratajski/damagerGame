@@ -41,4 +41,5 @@ class TestRandomizer(k20Sequences: List<Int>) : Randomizer {
 
     override fun token(): IO<String> = TODO()
 
+    override fun nextInt(bount: Int): IO<Int> =TODO()
 }

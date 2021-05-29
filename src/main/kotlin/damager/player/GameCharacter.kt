@@ -14,6 +14,7 @@ sealed class GameCharacter {
     abstract fun strength(): Stat
 
     abstract fun exp(increase: Stats): GameCharacter
+    abstract fun lifeIncrease(value:Int) : GameCharacter
 }
 
 data class PlayerCharacter(val name: String, private val baseStats: Stats) : GameCharacter() {
@@ -26,6 +27,9 @@ data class PlayerCharacter(val name: String, private val baseStats: Stats) : Gam
     override fun strength(): Stat = effectiveStats().strength
     override fun exp(increase: Stats): GameCharacter =
         copy(baseStats = baseStats + increase)
+
+    override fun lifeIncrease(value: Int): PlayerCharacter  =
+        copy(baseStats = baseStats.lifeIncrease(value))
 
 }
 

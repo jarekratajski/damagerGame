@@ -24,16 +24,19 @@ data class Stat(private val internalValue: Int = 0) {
 
 fun main() {
 
-    (0 until 20).forEach { i ->
-
-        println(i)
-        val z = Math.pow(1.6, i.toDouble()) * 10
-        println(z)
-        val x1 = Math.log(z / 10)
-        val x2 = Math.log(1.6)
-        val y = x1 / x2
-        val s = Stat.level(i)
-
-        println("$i => $z => $y => ${s.value()}")
-    }
+//    (0 until 20).forEach { i ->
+//
+//        println(i)
+//        val z = Math.pow(1.6, i.toDouble()) * 10
+//        println(z)
+//        val x1 = Math.log(z / 10)
+//        val x2 = Math.log(1.6)
+//        val y = x1 / x2
+//        val s = Stat.level(i)
+//
+//        println("$i => $z => $y => ${s.value()}")
+//    }
+    val stat = Stat(5)
+    println(stat)
+    println(stat.value())
 }

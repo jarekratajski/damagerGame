@@ -18,6 +18,11 @@ dependencies {
     detektPlugins("pl.setblack:kure-potlin:0.5.0")
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.16.0")
 
+    implementation("io.ktor:ktor-http-jvm:$ktor_version")
+    implementation("io.ktor:ktor-jackson:$ktor_version")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.0")
+    implementation("com.fasterxml.jackson.module:jackson-module-parameter-names:2.12.0")
+
     testImplementation("io.kotest:kotest-runner-junit5-jvm:4.4.3")
     testImplementation("io.kotest:kotest-assertions-core-jvm:4.4.3")
     testImplementation("pl.setblack:nee-ctx-web-test:$nee_version")

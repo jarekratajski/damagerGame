@@ -1,5 +1,7 @@
 package damager.rules
 
+import damager.engine.StatsView
+
 data class Stats(
     val strength: Stat = Stat(),
     val dexterity: Stat = Stat(),
@@ -25,9 +27,16 @@ data class Stats(
 
     fun dexterityIncrease(value:Int) = this.copy(dexterity = Stat(value))
 
-    fun lifeIncrease(value: Int) = this.copy(life = value)
+    fun lifeIncrease(value: Int) = this.copy(life = (life + value).coerceAtMost(health.value()))
 
     companion object {
         val empty = Stats()
     }
+
+    fun toView() : StatsView = StatsView(
+        strength = strength.value(),
+        dexterity = dexterity.value(),
+        health =  health.value(),
+        life = life
+    )
 }

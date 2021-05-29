@@ -53,6 +53,19 @@ data class Maze(val rows: List<MazeRow>) {
         this.replaceCell(cell.coord, newCell).replaceCell(other.coord, newOther)
     }
 
+    companion object {
+        internal fun generateEmptyMaze(width: Int, height: Int): Maze = run {
+            val initial = Maze(List.range(0, height).map { y ->
+                MazeRow(List.range(0, width).map { x ->
+                    Cell()
+                })
+            })
+            openRandomWalls(Coord(0, 0), initial).maze
+        }
+
+        private fun openRandomWalls(cellCoord: Coord, maze: Maze) =
+            damager.maze.generateMaze(cellCoord, damager.maze.MazeGeneration(maze, HashSet.empty()))
+    }
 }
 
 
@@ -69,6 +82,11 @@ data class Coord(val x: Int, val y: Int) {
     )
 
     override fun toString(): String = "($x,$y)"
+    fun up() = this.copy(y = y - 1)
+    fun down() = this.copy(y = y + 1)
+    fun left() = this.copy(x = x - 1)
+    fun right() = this.copy(x = x + 1)
+
 }
 
 data class Cell(
@@ -80,12 +98,6 @@ data class Cell(
 
 data class LocatedCell(val coord: Coord, val cell: Cell)
 
-fun generateEmptyMaze(width: Int, height: Int): Maze =
-    Maze(List.range(0, height).map { y ->
-        MazeRow(List.range(0, width).map { x ->
-            Cell()
-        })
-    })
 
 data class RenderedRows(val rows: Seq<String>) {
     operator fun plus(next: RenderedRows): RenderedRows =
@@ -122,8 +134,6 @@ data class MazeGeneration(val maze: Maze, val visited: HashSet<Coord>) {
     fun visit(coord: Coord) = copy(visited = this.visited.add(coord))
 }
 
-fun generateMaze(cellCoord: Coord, maze: Maze) =
-    damager.maze.generateMaze(cellCoord, damager.maze.MazeGeneration(maze, HashSet.empty()))
 
 fun generateMaze(cellCoord: Coord, mazeGeneration: MazeGeneration): MazeGeneration = run {
     val newVisitedMaze = mazeGeneration.visit(cellCoord)
@@ -145,10 +155,7 @@ fun generateMaze(cellCoord: Coord, mazeGeneration: MazeGeneration): MazeGenerati
 }
 
 fun main() {
-    val empty = generateEmptyMaze(9, 9)
-//    val maze = empty.openDoor(empty.getLocatedCell(Coord(2,1)), empty.getLocatedCell(Coord(2,0)))
-    val maze = generateMaze(Coord(0, 0), empty).maze
-//
+    val maze = Maze.generateEmptyMaze(9, 9)
     val rend = maze.render()
     println(rend.show())
 

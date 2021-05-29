@@ -9,5 +9,7 @@ data class Player(
     val name: String,
     val commands: Seq<Command> = Vector.empty()
     ) {
+    fun addCommand(cmd: Command): Player  =
+        copy(commands = commands.prepend(cmd))
 }
 
