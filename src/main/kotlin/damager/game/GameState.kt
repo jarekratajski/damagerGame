@@ -18,6 +18,7 @@ import damager.player.PlayerCharacter
 import damager.player.PlayerObject
 import damager.rules.Fight
 import damager.rules.FightData
+import damager.rules.LogStatement
 import damager.rules.Rules
 import damager.rules.Stat
 import damager.rules.Stats
@@ -33,7 +34,8 @@ typealias Token = String
 data class GameState(
     private val playfield: Maze = defaultMaze,
     private val objects: Seq<GameObject> = Vector.empty(),
-    private val players: Seq<Player> = Vector.empty()
+    private val players: Seq<Player> = Vector.empty(),
+    private val logs: Seq<LogView> = Vector.empty()
 ) {
 
     fun registerPlayer(uniqueName: String, randomizer: Randomizer): IO<Pair<GameState, Player>> =
@@ -108,7 +110,7 @@ data class GameState(
         }
         coords.fold(Nee.success { this } as IO<GameState>) { prev, location ->
             prev.flatMap { state ->
-                state.resolveCellTick(location, randomizer)
+                state.resolveCellFights(location, randomizer)
             }
         }
     }
@@ -189,7 +191,7 @@ data class GameState(
             }
         })
 
-    private fun resolveCellTick(location: Coord, randomizer: Randomizer): IO<GameState> = run {
+    private fun resolveCellFights(location: Coord, randomizer: Randomizer): IO<GameState> = run {
         val cellObjects = this.getCellObjects(location)
 
         val players = getAlivePlayers(cellObjects)
@@ -206,7 +208,7 @@ data class GameState(
                         fight.round(fighData).map { result ->
                             val objects1 = prevState.objects.replace(player1, player1.update(result.attacker as PlayerCharacter))
                                 .replace(player2, player2.update(result.defender as PlayerCharacter))
-                            this.copy(objects = objects1)
+                            this.copy(objects = objects1).addLogs(result.log.logs)
                         }
                     }
                 }
@@ -215,6 +217,9 @@ data class GameState(
             Nee.success { this }.e() as IO<GameState>
         }
     }
+
+    private fun addLogs(ls: Seq<LogStatement>) :GameState = this.copy(logs = logs.prependAll(ls.reverse().map {it.toView()}));
+
 
     private fun getAlivePlayers(cellObjects: Seq<GameObject>): Seq<PlayerObject> =
         cellObjects.filter { obj ->
@@ -248,7 +253,8 @@ data class GameState(
                         name = player.name,
                         token = player.token,
                         gameObject = it,
-                        commands = player.commands
+                        commands = player.commands,
+                        logs = this.logs.take(10).filter {it.canSee(player.name)}
                     )
                 }.e()
             }.getOrElse {

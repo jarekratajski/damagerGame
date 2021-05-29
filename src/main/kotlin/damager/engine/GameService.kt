@@ -5,8 +5,10 @@ import damager.InternalError
 import damager.e
 import damager.game.GameState
 import damager.game.GameView
+import damager.game.LogView
 import damager.maze.Coord
 import damager.player.Command
+import damager.rules.LogStatement
 import dev.neeffect.nee.Nee
 import dev.neeffect.nee.atomic.AtomicRef
 import io.vavr.collection.Seq
@@ -75,7 +77,8 @@ data class OwnPlayerView(
     val name: String,
     val token: String,
     val gameObject: PlayerView,
-    val commands: Seq<Command> = Vector.empty()
+    val commands: Seq<Command> = Vector.empty(),
+    val logs: Seq<LogView> = Vector.empty()
 )
 
 sealed class GameObjectView() {
