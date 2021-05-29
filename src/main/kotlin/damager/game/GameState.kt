@@ -207,21 +207,22 @@ data class GameState(
         val players = getAlivePlayers(cellObjects)
 
         if (players.size() > 1) {
-            randomizer.nextInt(players.size()).flatMap { pl1 ->
-                val pl2 = if (pl1 + 1 >= players.size()) 0 else pl1 + 1
-                val player1 = players[pl1] as PlayerObject
-                val player2 = players[pl2] as PlayerObject
-                val fight = Fight(randomizer)
-                val fighData = FightData(player1.character, player2.character)
-
-                fight.round(fighData).map { result ->
-                    val objects1 = objects.replace(player1, player1.update(result.attacker as PlayerCharacter))
-                        .replace(player2, player2.update(result.defender as PlayerCharacter))
-
-                    this.copy(objects = objects1)
+            List.range(0, players.size()/2).fold( Nee.success { this }.e()) { state, index ->
+                state.flatMap {  prevState ->
+                    randomizer.nextInt(players.size()).flatMap { pl1 ->
+                        val pl2 = if (pl1 + 1 >= players.size()) 0 else pl1 + 1
+                        val player1 = players[pl1] as PlayerObject
+                        val player2 = players[pl2] as PlayerObject
+                        val fight = Fight(randomizer)
+                        val fighData = FightData(player1.character, player2.character)
+                        fight.round(fighData).map { result ->
+                            val objects1 = prevState.objects.replace(player1, player1.update(result.attacker as PlayerCharacter))
+                                .replace(player2, player2.update(result.defender as PlayerCharacter))
+                            this.copy(objects = objects1)
+                        }
+                    }
                 }
             }
-
         } else {
             Nee.success { this }.e() as IO<GameState>
         }
